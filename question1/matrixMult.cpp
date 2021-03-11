@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 
         printf("worker %d, receive nb produit %d  \n ", taskid,nbProduit);
 
-        for (size_t k = 0; k < nbProduit; i++)
+        for (size_t k = 0; k < nbProduit; k++)
         {
             MPI_Recv(&x, 1, MPI_INT, source, 0, MPI_COMM_WORLD, &status);
             MPI_Recv(&y, 1, MPI_INT, source, 0, MPI_COMM_WORLD, &status);
