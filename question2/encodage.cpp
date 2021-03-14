@@ -49,7 +49,7 @@ int getCle(string mot) {
 }
 
 ///Cette  fonction  encode  le  message/
-string  encode(string  mot){
+string encode(string  mot){
   string copie ;
   int cle ;
   copie = mot ;
