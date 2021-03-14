@@ -6,7 +6,7 @@ using namespace std;
 string ADD(string mot, int cle) {
   int taille;
   taille = mot.length();
-  for(int i = 0; i < taille; i++) mot[i] = mot[i] + cle∗ i;
+  for(int i = 0; i < taille; i++) mot[i] = mot[i] + cle * i;
   return mot;
 }
 
@@ -46,4 +46,19 @@ int getCle(string mot) {
   for(int i = 0; i < mot.length(); i++) temp = temp + (unsigned int ) mot[i];
   cle = (temp % 4) + 1;
   return abs(cle);
+}
+
+///Cette  fonction  encode  le  message/
+string  encode(string  mot){
+  string copie ;
+  int cle ;
+  copie = mot ;
+  for(int j =0;  j<3;  j++){
+    cle = getCle (mot );
+    mot = decale (mot , cle /2);
+    mot = ADD(mot , cle );
+    mot = echange (mot , cle ) ;
+    mot = XOR(mot , copie ) ;
+    }
+    return mot;
 }
