@@ -24,40 +24,39 @@ char* XOR(char* mot, char* cle) {
 //     return mot;
 // }
 
-// //∗Cette  fonction  effectue  une  t r a n s l a t i o nentre  l e s  caracteres  du mot d ’ une  distancededuite  de  la  cle3
-// string echange(string mot, int cle) {
-//   int taille = mot.length();
-//   for(int i = 0; i + cle < taille; i++) {
-//     char temp;
-//     temp = mot[i];
-//     mot[i] = mot[i + cle];
-//     mot[i + cle] = temp;
-//   }
-//   return mot;
-// }
+//∗Cette  fonction  effectue  une  t r a n s l a t i o nentre  l e s  caracteres  du mot d ’ une  distancededuite  de  la  cle3
+char* echange(char* mot, int cle) {
+  for(int i = 0; i + cle < TAILLE_MOT; i++) {
+    char temp;
+    temp = mot[i];
+    mot[i] = mot[i + cle];
+    mot[i + cle] = temp;
+  }
+  return mot;
+}
 // //∗Cette  fonction  genere  une  cle  numerique∗∗/
-// int getCle(string mot) {
-//   int cle, temp;
-//   temp = 0;
-//   for(int i = 0; i < mot.length(); i++) temp = temp + (unsigned int ) mot[i];
-//   cle = (temp % 4) + 1;
-//   return abs(cle);
-// }
+int getCle(char* mot) {
+  int cle, temp;
+  temp = 0;
+  for(int i = 0; i < TAILLE_MOT; i++) temp = temp + (unsigned int ) mot[i];
+  cle = (temp % 4) + 1;
+  return abs(cle);
+}
 
-// ///Cette  fonction  encode  le  message/
-// string encode(string  mot){
-//   string copie ;
-//   int cle ;
-//   copie = mot ;
-//   for(int j =0;  j<3;  j++){
-//     cle = getCle (mot );
-//     mot = decale (mot , cle /2);
-//     mot = ADD(mot , cle );
-//     mot = echange (mot , cle ) ;
-//     mot = XOR(mot , copie ) ;
-//     }
-//     return mot;
-// }
+///Cette  fonction  encode  le  message/
+char* encode(char*  mot){
+  char* copie ;
+  int cle ;
+  copie = mot ;
+  for(int j =0;  j<3;  j++){
+    cle = getCle (mot );
+    //mot = decale (mot , cle /2);
+    mot = ADD(mot , cle );
+    mot = echange (mot , cle ) ;
+    mot = XOR(mot , copie ) ;
+    }
+    return mot;
+}
 
 void incrementIndex(int *my_index, int rangIndex){
     my_index[rangIndex]+=1;
