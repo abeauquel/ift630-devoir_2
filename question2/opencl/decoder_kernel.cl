@@ -13,16 +13,23 @@ char* XOR(char* mot, char* cle) {
   return mot;
 }
 
-// //∗Cette  fonction  effectue  un decalage  c i r c u l a i r evers  la  droite  de ”nb”  caracteres∗∗
-// char* decale(char* mot, int nb) {
-//     char t[nb];
-//     int i=0;
-//     int max = TAILLE_MOT - 1;
-//     for(i = 0; i < nb; i++) t[i] = mot[max- i];
-//     for(i = max; i >= nb; i--) mot[i] = mot[i- nb];
-//     for(i = 0; i < nb; i++) mot[i] = t[nb- i- 1];
-//     return mot;
-// }
+//∗Cette  fonction  effectue  un decalage  c i r c u l a i r evers  la  droite  de ”nb”  caracteres∗∗
+char* decale(char* mot, int nb) {
+    char t[TAILLE_MOT];
+    //char t[nb]; todo vérfier que c'est ok
+    int i=0;
+    int max = TAILLE_MOT - 1;
+    for(i = 0; i < nb; i++){
+        t[i] = mot[max- i];
+    } 
+    for(i = max; i >= nb; i--){
+        mot[i] = mot[i- nb];
+    } 
+    for(i = 0; i < nb; i++){
+        mot[i] = t[nb- i- 1];
+    } 
+    return mot;
+}
 
 //∗Cette  fonction  effectue  une  t r a n s l a t i o nentre  l e s  caracteres  du mot d ’ une  distancededuite  de  la  cle3
 char* echange(char* mot, int cle) {
@@ -50,7 +57,7 @@ char* encode(char*  mot){
   copie = mot ;
   for(int j =0;  j<3;  j++){
     cle = getCle (mot );
-    //mot = decale (mot , cle /2);
+    mot = decale (mot , cle /2);
     mot = ADD(mot , cle );
     mot = echange (mot , cle ) ;
     mot = XOR(mot , copie ) ;
