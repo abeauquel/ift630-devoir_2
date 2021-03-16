@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     cout << "---------------------------------------- \n";
     cout << "mot trouvé : "<< motTest << "\n";
     cout << "hash trouvé : \n";
-    for (int i=0; i<hashTest.length(); i++)
+    for (size_t i=0; i<hashTest.length(); i++)
         cout << hex << (int)hashTest[i] << " ";
     cout << "\n" << endl;
     auto duration = duration_cast<seconds>(stop - start); 
