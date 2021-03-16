@@ -71,20 +71,23 @@
 
 __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet) {
     
-    printf("kernel void decoder() \n");
+    
     // Get the index of the current element
-    int i = get_global_id(0);
-
+    int id_thread = get_global_id(0);
+    printf("kernel void decoder(), process %d \n",id_thread);
     int my_index[7] = {0,0,0,0,0,0,0};
+    
+    //printf(" hash à trouver : %c \n",hash_a_trouver[1]);
+    printf(" hash à trouver : %c \n",alphabet[0]); //a
+    printf(" hash à trouver : %c \n",alphabet[1]); //e
 
-   
-    // std::string hash_test=alphabet[my_index[0]];
+    //hash_a_trouver = alphabet[my_index[i]];
     // for (size_t i = 1; i < TAILLE_MOT; i++)
     // {
     //     hash_test+=alphabet[my_index[i]];
     // }
 
-    
+   
     // // cout << hash_test << "\n";
     // hashTest=encode(hash_test);
     // incrementIndex(TAILLE_MOT-1);
@@ -99,5 +102,6 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     //     hashTest=encode(hash_test);
     //     incrementIndex(TAILLE_MOT-1);
     // }
+    printf("fin kernel void decoder() , process %d \n",id_thread);
 }
 
