@@ -1,11 +1,11 @@
+#define TAILLE_MOT               7  
 
-// //Cette  fonction  effectue  une  s u b s t i t u t i o n  decaracteres  en  additionnant  une  valeur
-// string ADD(string mot, int cle) {
-//   int taille;
-//   taille = mot.length();
-//   for(int i = 0; i < taille; i++) mot[i] = mot[i] + cle * i;
-//   return mot;
-// }
+//Cette  fonction  effectue  une  s u b s t i t u t i o n  decaracteres  en  additionnant  une  valeur
+char* ADD(char* mot, int cle) {
+  int taille;
+  for(int i = 0; i < TAILLE_MOT; i++) mot[i] = mot[i] + cle * i;
+  return mot;
+}
 
 // //Cette  fonction  effectue  un ou  e x c l u s i fentre  la  chaine  de  caracteres  et  la  cle
 // string XOR(string mot, string cle) {
