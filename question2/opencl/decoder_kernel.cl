@@ -8,21 +8,20 @@ char* ADD(char* mot, int cle) {
 }
 
 // //Cette  fonction  effectue  un ou  e x c l u s i fentre  la  chaine  de  caracteres  et  la  cle
-// string XOR(string mot, string cle) {
-//   int taille;
-//   taille = mot.length();
-//   for(int i = 0; i < taille; i++) mot[i] = mot[i] ^ cle[i];
-//   return mot;
-// }
+char* XOR(char* mot, char* cle) {
+  for(int i = 0; i < TAILLE_MOT; i++) mot[i] = mot[i] ^ cle[i];
+  return mot;
+}
 
 // //∗Cette  fonction  effectue  un decalage  c i r c u l a i r evers  la  droite  de ”nb”  caracteres∗∗
-// string decale(string mot, int nb) {
-//   char t[nb];
-//   int max = mot.length()- 1;
-//   for(int i = 0; i < nb; i++) t[i] = mot[max- i];
-//   for(int i = max; i >= nb; i--) mot[i] = mot[i- nb];
-//   for(int i = 0; i < nb; i++) mot[i] = t[nb- i- 1];
-//   return mot;
+// char* decale(char* mot, int nb) {
+//     char t[nb];
+//     int i=0;
+//     int max = TAILLE_MOT - 1;
+//     for(i = 0; i < nb; i++) t[i] = mot[max- i];
+//     for(i = max; i >= nb; i--) mot[i] = mot[i- nb];
+//     for(i = 0; i < nb; i++) mot[i] = t[nb- i- 1];
+//     return mot;
 // }
 
 // //∗Cette  fonction  effectue  une  t r a n s l a t i o nentre  l e s  caracteres  du mot d ’ une  distancededuite  de  la  cle3
