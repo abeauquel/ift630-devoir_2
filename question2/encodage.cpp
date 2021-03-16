@@ -6,7 +6,7 @@ using namespace std;
 string ADD(string mot, int cle) {
   int taille;
   taille = mot.length();
-  for(int i = 0; i < taille; i++) mot[i] = mot[i] + cle * i;
+  for(size_t i = 0; i < taille; i++) mot[i] = mot[i] + cle * i;
   return mot;
 }
 
@@ -14,7 +14,7 @@ string ADD(string mot, int cle) {
 string XOR(string mot, string cle) {
   int taille;
   taille = mot.length();
-  for(int i = 0; i < taille; i++) mot[i] = mot[i] ^ cle[i];
+  for(size_t i = 0; i < taille; i++) mot[i] = mot[i] ^ cle[i];
   return mot;
 }
 
@@ -22,16 +22,16 @@ string XOR(string mot, string cle) {
 string decale(string mot, int nb) {
   char t[nb];
   int max = mot.length()- 1;
-  for(int i = 0; i < nb; i++) t[i] = mot[max- i];
-  for(int i = max; i >= nb; i--) mot[i] = mot[i- nb];
-  for(int i = 0; i < nb; i++) mot[i] = t[nb- i- 1];
+  for(size_t i = 0; i < nb; i++) t[i] = mot[max- i];
+  for(size_t i = max; i >= nb; i--) mot[i] = mot[i- nb];
+  for(size_t i = 0; i < nb; i++) mot[i] = t[nb- i- 1];
   return mot;
 }
 
 //∗Cette  fonction  effectue  une  t r a n s l a t i o nentre  l e s  caracteres  du mot d ’ une  distancededuite  de  la  cle3
 string echange(string mot, int cle) {
   int taille = mot.length();
-  for(int i = 0; i + cle < taille; i++) {
+  for(size_t i = 0; i + cle < taille; i++) {
     char temp;
     temp = mot[i];
     mot[i] = mot[i + cle];
@@ -43,7 +43,7 @@ string echange(string mot, int cle) {
 int getCle(string mot) {
   int cle, temp;
   temp = 0;
-  for(int i = 0; i < mot.length(); i++) temp = temp + (unsigned int ) mot[i];
+  for(size_t i = 0; i < mot.length(); i++) temp = temp + (unsigned int ) mot[i];
   cle = (temp % 4) + 1;
   return abs(cle);
 }
@@ -53,7 +53,7 @@ string encode(string  mot){
   string copie ;
   int cle ;
   copie = mot ;
-  for(int j =0;  j<3;  j++){
+  for(size_t j =0;  j<3;  j++){
     cle = getCle (mot );
     mot = decale (mot , cle /2);
     mot = ADD(mot , cle );
