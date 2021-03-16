@@ -74,20 +74,22 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     
     // Get the index of the current element
     int id_thread = get_global_id(0);
-    printf("kernel void decoder(), process %d \n",id_thread);
     int my_index[7] = {0,0,0,0,0,0,0};
-    
+    char mot_a_trouver[7]; 
+    int i = 0;
+    char lettre_predefini = alphabet[id_thread%26];
+    printf("kernel void decoder(), process %d, avec lettre : %c \n",id_thread, lettre_predefini);
     //printf(" hash à trouver : %c \n",hash_a_trouver[1]);
-    printf(" hash à trouver : %c \n",alphabet[0]); //a
-    printf(" hash à trouver : %c \n",alphabet[1]); //e
+    // printf(" hash à trouver : %c \n",alphabet[0]); //a
+    // printf(" hash à trouver : %c \n",alphabet[1]); //b
 
-    //hash_a_trouver = alphabet[my_index[i]];
-    // for (size_t i = 1; i < TAILLE_MOT; i++)
-    // {
-    //     hash_test+=alphabet[my_index[i]];
-    // }
+    mot_a_trouver[0] = lettre_predefini;
+    for (i=1; i < 7; i++)
+    {
+        mot_a_trouver[i]=alphabet[my_index[i]];
+    }
 
-   
+    printf("hash à trouver : %s \n",mot_a_trouver); //a
     // // cout << hash_test << "\n";
     // hashTest=encode(hash_test);
     // incrementIndex(TAILLE_MOT-1);
