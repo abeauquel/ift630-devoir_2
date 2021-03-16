@@ -60,14 +60,14 @@
 //     return mot;
 // }
 
-// void incrementIndex(int rangIndex){
-//     my_index[rangIndex]+=1;
-//     if(my_index[rangIndex] >= 26){
-//         my_index[rangIndex]=0;
-//         if(rangIndex != 0)
-//             incrementIndex(rangIndex-1);
-//     }
-// }
+void incrementIndex(int *my_index, int rangIndex){
+    my_index[rangIndex]+=1;
+    if(my_index[rangIndex] >= 26){
+        my_index[rangIndex]=0;
+        if(rangIndex != 0)
+            incrementIndex(my_index, rangIndex-1);
+    }
+}
 
 __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet) {
     
