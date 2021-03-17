@@ -107,7 +107,6 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     int j = 0;
     int result_compare_hash = 0;
     printf("kernel void decoder(), process %d, avec lettre : %c \n",id_thread, lettre_predefini);
-
     //printf("HASH a trouver \n");
     for(int j =0;  j<TAILLE_MOT;  j++){
       copy_hash_a_trouver[j] = hash_a_trouver[j];
@@ -121,7 +120,7 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
    
     mot_a_tester[0] = lettre_predefini;
 
-    while(is_result>0 && (mot_a_tester[0] == lettre_predefini) && (result_compare_hash == 0)){
+    while((is_result[0] ==0) && (mot_a_tester[0] == lettre_predefini)){
       mot_a_tester[0]= lettre_predefini;
       for (i=1; i < TAILLE_MOT; i++)
       {
@@ -132,10 +131,15 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
       encode(mot_a_tester, hash_a_tester);
       incrementIndex(my_index, TAILLE_MOT-1);
       result_compare_hash=compareHash(hash_a_tester, copy_hash_a_trouver);
-      if(result_compare_hash > 0){
-        is_result=1;
+       //printf("is_result= %d \n", is_result[0]);
+      if(result_compare_hash != 0){
+        
+        //printf("is_result= %d \n", is_result[0]);
+        is_result[0]=1;
+        //printf("is_result= %d \n", is_result[0]);
       }
     }
+    printf("kernel void decoder(), process %d, OK \n",id_thread);
     
     if(result_compare_hash != 0){
 

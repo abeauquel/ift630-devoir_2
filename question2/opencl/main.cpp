@@ -30,9 +30,10 @@ int main(void)
         char hash_a_trouver[TAILLE_MOT] ;
         char hash_test[TAILLE_MOT];
         char mot_trouve[TAILLE_MOT];
-        int* is_result;
+        int is_result[1];
+        is_result[0]=0;
         strcpy(hash_a_trouver, str_hash_a_trouver.c_str());
-
+        
         for (int i=0; i< TAILLE_MOT; i++)
                 cout << hex << (int)hash_a_trouver[i] << " ";
         cout << "\n" << endl;
@@ -98,7 +99,7 @@ int main(void)
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *)&is_result_mem_obj);
         
         // Execute the OpenCL kernel on the list
-        size_t global_item_size = 1; // Process the entire lists
+        size_t global_item_size = 2; // Process the entire lists
       //  size_t local_item_size = 1; // Process in groups of 64
         ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, NULL, 0, NULL, NULL);
 
