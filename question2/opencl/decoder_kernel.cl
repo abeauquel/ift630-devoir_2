@@ -62,25 +62,25 @@ char* encode(char*  mot){
     mot = echange (mot , cle ) ;
     mot = XOR(mot , copie ) ;
     }
-    return mot;
+  return mot;
 }
 
 void incrementIndex(int *my_index, int rangIndex){
     my_index[rangIndex]+=1;
     if(my_index[rangIndex] >= 26){
         my_index[rangIndex]=0;
-        if(rangIndex != 0)
+        if(rangIndex > 1)//On ne change pas la premiere lettre, c'est une constante
             incrementIndex(my_index, rangIndex-1);
     }
 }
 
 __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet) {
     
-    
     // Get the index of the current element
     int id_thread = get_global_id(0);
     int my_index[7] = {0,0,0,0,0,0,0};
-    char mot_a_trouver[7]; 
+    char mot_a_tester[7]; 
+    char* hash_a_tester; 
     int i = 0;
     char lettre_predefini = alphabet[id_thread%26];
     printf("kernel void decoder(), process %d, avec lettre : %c \n",id_thread, lettre_predefini);
@@ -88,27 +88,33 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     // printf(" hash à trouver : %c \n",alphabet[0]); //a
     // printf(" hash à trouver : %c \n",alphabet[1]); //b
 
-    mot_a_trouver[0] = lettre_predefini;
-    for (i=1; i < 7; i++)
+    mot_a_tester[0] = lettre_predefini;
+    for (i=1; i < TAILLE_MOT; i++)
     {
-        mot_a_trouver[i]=alphabet[my_index[i]];
+        mot_a_tester[i]=alphabet[my_index[i]];
     }
 
-    printf("hash à trouver : %s \n",mot_a_trouver); //a
-    // // cout << hash_test << "\n";
-    // hashTest=encode(hash_test);
-    // incrementIndex(TAILLE_MOT-1);
+    printf("mot à tester : %s \n",mot_a_tester); //a
+    // cout << hash_test << "\n";
+    hash_a_tester=encode(mot_a_tester);
+    printf("hash à tester : %s \n",hash_a_tester); //a
+    for (int i=0; i< TAILLE_MOT; i++){
+      printf("%X ", hash_a_tester[i]);
+    }
+    printf("\n");
+ 
+
     // while(hashATrouver.compare(hashTest) != 0){
-    //     hash_test=alphabet[my_index[0]];
-    //     for (size_t i = 1; i < TAILLE_MOT; i++)
+    //     mot_a_tester[0]== lettre_predefini;
+    //     for (i=1; i < TAILLE_MOT; i++)
     //     {
-    //          hash_test+=alphabet[my_index[i]];
+    //         mot_a_tester[i]=alphabet[my_index[i]];
     //     }
         
-    //    // cout << hash_test << "\n";
-    //     hashTest=encode(hash_test);
-    //     incrementIndex(TAILLE_MOT-1);
+    //     hash_a_tester=encode(mot_a_tester);
+    //     incrementIndex(my_index, TAILLE_MOT-1);
     // }
+    // hash_test=hash_a_tester;
     printf("fin kernel void decoder() , process %d \n",id_thread);
 }
 
