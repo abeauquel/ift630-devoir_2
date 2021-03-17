@@ -121,7 +121,7 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
    
     mot_a_tester[0] = lettre_predefini;
 
-    while((mot_a_tester[0] == lettre_predefini) && (result_compare_hash == 0)){
+    while(is_result>0 && (mot_a_tester[0] == lettre_predefini) && (result_compare_hash == 0)){
       mot_a_tester[0]= lettre_predefini;
       for (i=1; i < TAILLE_MOT; i++)
       {
@@ -132,9 +132,13 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
       encode(mot_a_tester, hash_a_tester);
       incrementIndex(my_index, TAILLE_MOT-1);
       result_compare_hash=compareHash(hash_a_tester, copy_hash_a_trouver);
+      if(result_compare_hash > 0){
+        is_result=1;
+      }
     }
     
     if(result_compare_hash != 0){
+
       for(j =0;  j<TAILLE_MOT;  j++){
         hash_test[j] = hash_a_tester[j];
       }
