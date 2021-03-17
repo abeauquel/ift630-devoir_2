@@ -91,8 +91,8 @@ int main(void)
         
         // Execute the OpenCL kernel on the list
         size_t global_item_size = 1; // Process the entire lists
-        size_t local_item_size = 1; // Process in groups of 64
-        ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, &local_item_size, 0, NULL, NULL);
+      //  size_t local_item_size = 1; // Process in groups of 64
+        ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, NULL, 0, NULL, NULL);
 
         // Read the memory buffer C on the device to the local variable C
         //int *C = (int*)malloc(sizeof(int)*LIST_SIZE);
@@ -116,12 +116,8 @@ int main(void)
         ret = clReleaseCommandQueue(command_queue);
         ret = clReleaseContext(context);
 
-       // free(A);
-       // free(B);
-        //free(C);
-
-        auto stop = high_resolution_clock::now(); 
         cout << "---------------------------------------- \n";
+        auto stop = high_resolution_clock::now(); 
         cout << "mot trouvé : "<< hash_test << "\n";
         cout << "hash trouvé : \n";
         for (size_t i=0; i< TAILLE_MOT; i++)
