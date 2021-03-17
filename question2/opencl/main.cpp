@@ -25,7 +25,7 @@ int main(void)
 {
         auto start = high_resolution_clock::now(); 
         void incrementIndex(int rangIndex);
-        string mot_a_trouver = "aanjour";
+        string mot_a_trouver = "aaaaour";
         string str_hash_a_trouver = encode(mot_a_trouver);
         char hash_a_trouver[TAILLE_MOT] ;
         char hash_test[TAILLE_MOT];

@@ -3,9 +3,9 @@
 #define TAILLE_MOT               7  
 
 
-void mystrncpy(char* result,char * a_copier, int taille){
+void mystrncpy(char* result_compare_hash,char * a_copier, int taille){
         for(int i = 0; i < taille; i++) {
-                result[i]= a_copier[i];
+                result_compare_hash[i]= a_copier[i];
         }
 }
 //Cette  fonction  effectue  une  s u b s t i t u t i o n  decaracteres  en  additionnant  une  valeur
@@ -86,13 +86,13 @@ void incrementIndex(int *my_index, int rangIndex){
 }
 
 int compareHash(char* hash1, char* hash2){
-  int result = 1;
+  int result_compare_hash = 1;
   for(int j =0;  j<TAILLE_MOT;  j++){
     if(hash1[j] != hash2[j]){
-      result= 0;
+      result_compare_hash= 0;
     }
   }
-  return result;
+  return result_compare_hash;
 }
 
 int main(){
@@ -107,7 +107,7 @@ int main(){
     int i = 0;
     int j;
     char lettre_predefini = alphabet[id_thread%26];
-    int result = 1;
+    int result_compare_hash = 0;
     printf("kernel void decoder(), process %d, avec lettre : %c \n",id_thread, lettre_predefini);
 
     mot_a_tester[0]='a';
@@ -120,23 +120,13 @@ int main(){
     printf("mot_a_tester %.7s \n", mot_a_tester);
     encode(mot_a_tester, hash_a_trouver);
 
-
     mot_a_tester[0] = lettre_predefini;
-    for (i=1; i < TAILLE_MOT; i++)
-    {
-        mot_a_tester[i]=alphabet[my_index[i]];
-    }
 
-    printf("mot_a_tester %.7s \n", mot_a_tester);
+    // printf("hash_a_tester %.7s \n", hash_a_tester);
+    // printf("hash_a_trouver %.7s \n", hash_a_trouver);
+    // printf("result_compare_hash %d \n", result_compare_hash);
 
-    encode(mot_a_tester, hash_a_tester);
-    result=compareHash(hash_a_tester, hash_a_trouver);
-
-    printf("hash_a_tester %.7s \n", hash_a_tester);
-    printf("hash_a_trouver %.7s \n", hash_a_trouver);
-    printf("result %d \n", result);
-
-    while((mot_a_tester[0] == lettre_predefini) && (result == 0)){
+    while((mot_a_tester[0] == lettre_predefini) && (result_compare_hash == 0)){
         mot_a_tester[0]= lettre_predefini;
         for (i=1; i < TAILLE_MOT; i++)
         {
@@ -147,12 +137,7 @@ int main(){
         encode(mot_a_tester, hash_a_tester);
         incrementIndex(my_index, TAILLE_MOT-1);
 
-        result= 1;
-        for(j =0;  j<TAILLE_MOT;  j++){
-          if(hash_a_tester[j] != hash_a_trouver[j]){
-            result= 0;
-          }
-        }
+        result_compare_hash=compareHash(hash_a_tester, hash_a_trouver);
     }
 
         printf("HASH TROUVE : \n");
