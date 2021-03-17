@@ -29,6 +29,8 @@ int main(void)
         string str_hash_a_trouver = encode(mot_a_trouver);
         char hash_a_trouver[TAILLE_MOT] ;
         char hash_test[TAILLE_MOT];
+        char mot_trouve[TAILLE_MOT];
+        int* is_result;
         strcpy(hash_a_trouver, str_hash_a_trouver.c_str());
 
         for (int i=0; i< TAILLE_MOT; i++)
@@ -69,11 +71,15 @@ int main(void)
         cl_mem hash_a_trouver_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, TAILLE_MOT * sizeof(char), NULL, &ret);
         cl_mem hash_a_tester_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE, TAILLE_MOT * sizeof(char), NULL, &ret);
         cl_mem alphabet_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, 26 * sizeof(char), NULL, &ret);
+        cl_mem result_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE, TAILLE_MOT * sizeof(char), NULL, &ret);
+        cl_mem is_result_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(int), NULL, &ret);
 
         // Copy variables to their respective memory buffers
         ret = clEnqueueWriteBuffer(command_queue, hash_a_trouver_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), hash_a_trouver, 0, NULL, NULL);
         ret = clEnqueueWriteBuffer(command_queue, hash_a_tester_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), hash_test, 0, NULL, NULL);
         ret = clEnqueueWriteBuffer(command_queue, alphabet_mem_obj, CL_TRUE, 0, 26 * sizeof(char), alphabet, 0, NULL, NULL);
+        ret = clEnqueueWriteBuffer(command_queue, result_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char),mot_trouve, 0, NULL, NULL);
+        ret = clEnqueueWriteBuffer(command_queue, is_result_mem_obj, CL_TRUE, 0, sizeof(int), is_result, 0, NULL, NULL);
 
         // Create a program from the kernel source
         cl_program program = clCreateProgramWithSource(context, 1, (const char **)&source_str, (const size_t *)&source_size, &ret);
@@ -88,16 +94,17 @@ int main(void)
         ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&hash_a_trouver_mem_obj);
         ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *)&hash_a_tester_mem_obj);
         ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *)&alphabet_mem_obj);
+        ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void *)&result_mem_obj);
+        ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *)&is_result_mem_obj);
         
         // Execute the OpenCL kernel on the list
         size_t global_item_size = 1; // Process the entire lists
       //  size_t local_item_size = 1; // Process in groups of 64
         ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, NULL, 0, NULL, NULL);
 
-        // Read the memory buffer C on the device to the local variable C
-        //int *C = (int*)malloc(sizeof(int)*LIST_SIZE);
+        // Read the memory buffer
         ret = clEnqueueReadBuffer(command_queue, hash_a_tester_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), hash_test, 0, NULL, NULL);
-         
+        ret = clEnqueueReadBuffer(command_queue, result_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), mot_trouve, 0, NULL, NULL);         
 
         // Display the result to the screen
         //for(i = 0; i < LIST_SIZE; i++)
@@ -118,7 +125,11 @@ int main(void)
 
         cout << "---------------------------------------- \n";
         auto stop = high_resolution_clock::now(); 
-        cout << "mot trouvé : "<< hash_test << "\n";
+        cout << "mot trouvé : ";
+        for (size_t i=0; i< TAILLE_MOT; i++){
+                printf("%c", mot_trouve[i]);
+        }
+        cout << "\n" << endl;
         cout << "hash trouvé : \n";
         for (size_t i=0; i< TAILLE_MOT; i++)
                 cout << hex << (int)hash_test[i] << " ";

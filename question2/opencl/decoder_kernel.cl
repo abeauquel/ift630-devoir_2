@@ -93,7 +93,7 @@ int compareHash(char* hash1, char* hash2){
   return 1;
 }
 
-__kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet) {
+__kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet, __global char *mot_trouve, __global int *is_result) {
     
     // Get the index of the current element
     int id_thread = get_global_id(0);
@@ -135,10 +135,14 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     }
     
     if(result_compare_hash != 0){
-      printf("Le process %d, a troubé  le mot : %.7s \n", id_thread, mot_a_tester);
       for(j =0;  j<TAILLE_MOT;  j++){
         hash_test[j] = hash_a_tester[j];
       }
+
+      for(j =0;  j<TAILLE_MOT;  j++){
+        mot_trouve[j] = mot_a_tester[j];
+      }
+      printf("Le process %d, a trouvé  le mot : %.7s \n", id_thread, mot_a_tester);
     }
     
     printf("fin kernel void decoder() , process %d \n",id_thread);
