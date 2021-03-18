@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <inttypes.h>
 
 #include "../encodage.cpp"
 #include <chrono> 
@@ -25,7 +26,7 @@ int main(void)
 {
         auto start = high_resolution_clock::now(); 
         void incrementIndex(int rangIndex);
-        string mot_a_trouver = "aaaaour";
+        string mot_a_trouver = "banjour";
         string str_hash_a_trouver = encode(mot_a_trouver);
         char hash_a_trouver[TAILLE_MOT] ;
         char hash_test[TAILLE_MOT];
@@ -99,17 +100,13 @@ int main(void)
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *)&is_result_mem_obj);
         
         // Execute the OpenCL kernel on the list
-        size_t global_item_size = 2; // Process the entire lists
+        size_t global_item_size = 26; // Process the entire lists
       //  size_t local_item_size = 1; // Process in groups of 64
         ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global_item_size, NULL, 0, NULL, NULL);
 
         // Read the memory buffer
         ret = clEnqueueReadBuffer(command_queue, hash_a_tester_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), hash_test, 0, NULL, NULL);
         ret = clEnqueueReadBuffer(command_queue, result_mem_obj, CL_TRUE, 0, TAILLE_MOT * sizeof(char), mot_trouve, 0, NULL, NULL);         
-
-        // Display the result to the screen
-        //for(i = 0; i < LIST_SIZE; i++)
-        //   printf("%d + %d = %d\n", A[i], B[i], C[i]);
 
         // Clean up
         ret = clFlush(command_queue);
@@ -136,8 +133,7 @@ int main(void)
                 cout << hex << (int)hash_test[i] << " ";
         cout << "\n" << endl;
         auto duration = duration_cast<seconds>(stop - start); 
-
-        cout << "Time taken by function: " << duration.count() << " seconds" << endl;
+        printf("Time taken by function: %" PRId64 " seconds\n", duration.count());
 
         return 0;
 }
