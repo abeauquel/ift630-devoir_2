@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     cout << "\n" << endl;
     auto duration = duration_cast<seconds>(stop - start); 
 
-    cout << "Time taken by function: " << duration.count() << " seconds" << endl;
+    cout << "Time taken by function: "<< fixed << duration.count() << " seconds" << endl;
 }
 
 void incrementIndex(int rangIndex){
