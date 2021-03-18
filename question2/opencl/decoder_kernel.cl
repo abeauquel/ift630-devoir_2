@@ -100,6 +100,7 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
     int my_index[7] = {0,0,0,0,0,0,0};
     char copy_alphabet[26];
     char copy_hash_a_trouver[7];
+    int copy_is_result = 0;
     char mot_a_tester[7]; 
     char hash_a_tester[7]; 
     char lettre_predefini = alphabet[id_thread%26];
@@ -120,24 +121,23 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
    
     mot_a_tester[0] = lettre_predefini;
 
-    while((is_result[0] ==0) && (mot_a_tester[0] == lettre_predefini)){
+    while(copy_is_result ==0 && (mot_a_tester[0] == lettre_predefini)){
       mot_a_tester[0]= lettre_predefini;
       for (i=1; i < TAILLE_MOT; i++)
       {
         mot_a_tester[i]=copy_alphabet[my_index[i]];
       }
       //printf("mot à tester : %.7s \n",mot_a_tester);
-
       encode(mot_a_tester, hash_a_tester);
       incrementIndex(my_index, TAILLE_MOT-1);
       result_compare_hash=compareHash(hash_a_tester, copy_hash_a_trouver);
        //printf("is_result= %d \n", is_result[0]);
       if(result_compare_hash != 0){
-        
-        //printf("is_result= %d \n", is_result[0]);
         is_result[0]=1;
         //printf("is_result= %d \n", is_result[0]);
       }
+
+      copy_is_result=is_result[0];
     }
     printf("kernel void decoder(), process %d, OK \n",id_thread);
     
