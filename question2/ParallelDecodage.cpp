@@ -8,31 +8,32 @@
 #include <sys/types.h>
 
 using namespace std::chrono; 
-#define TAILLE_MOT               7  
+#define TAILLE_MOT               7 
+#define THREAD_COUNT            4
 
 char alphabet[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-int myIndex[TAILLE_MOT] = {0,0,0,0,0,0,0}, start1[TAILLE_MOT] = {0,0,0,0,0,0,1}, start2[TAILLE_MOT] = {0,0,0,0,0,0,2};
+int start0[TAILLE_MOT] = {0,0,0,0,0,0,0}, start1[TAILLE_MOT] = {0,0,0,0,0,0,1}, start2[TAILLE_MOT] = {0,0,0,0,0,0,2}, start3[TAILLE_MOT] = {0,0,0,0,0,0,3};
 int found = 0;
-char* motTest;
-char* hashTest;
+string motTest;
+string hashTest;
 int password[TAILLE_MOT];
 int res[TAILLE_MOT];
 
 int main(int argc, char **argv)
 {   
     void incrementIndex(int rangIndex, int startVector[]);
-    int* findPassword(int startVector[], char* alpha, char* hashATrouver, int threadID);
+    string findPassword(int startVector[], string hashATrouver, int threadID);
 
     //Encrypter un mot test
-    char motATrouver[TAILLE_MOT] = {'a', 'a', 'a', 'a', 'o', 'u', 'r'};
-    char hashATrouver[TAILLE_MOT] = "";
-    encode(motATrouver);
+    string motATrouver = "aanjour";
+    string hashATrouver= "";
+    
+    
+    hashATrouver = encode(motATrouver);
 
-    printf("motATrouver : %s", motATrouver);
-
-    for(int i = 0; i < TAILLE_MOT; i++)
-        hashATrouver[i] = motATrouver[i];
-
+    cout << "motATrouver : " << motATrouver << endl;
+    cout << "hashATrouver : " << hashATrouver << endl;
+    
     //Afficher le hash à décoder
     for (int i=0; i<TAILLE_MOT; i++)
         cout << hex << (int)hashATrouver[i] << " ";
@@ -45,12 +46,10 @@ int main(int argc, char **argv)
     auto start = high_resolution_clock::now();
 
     //Start 4 threads with different start points
-    auto future1 = async(findPassword, myIndex, alphabet, hashATrouver, 1);
-    //auto future2 = async(findPassword, start1, alphabet, hashATrouver, 2);
-    //incrementIndex(TAILLE_MOT - 1, myIndex);
-    //auto future3 = async(findPassword, myIndex, hashATrouver, 3);
-    //incrementIndex(TAILLE_MOT - 1, myIndex);
-    //auto future4 = async(findPassword, myIndex, hashATrouver, 4);
+    auto future1 = async(findPassword, start0, hashATrouver, 1);
+    auto future2 = async(findPassword, start1, hashATrouver, 2);
+    auto future3 = async(findPassword, start2, hashATrouver, 3);
+    auto future4 = async(findPassword, start3, hashATrouver, 4);
 
     while(found==0){
         std::this_thread::sleep_for(500ms);
@@ -58,48 +57,36 @@ int main(int argc, char **argv)
 
     //Stopper le compteur
     auto stop = high_resolution_clock::now();
-
+    string password;
+    cout << "found by thread " << found << endl;
     switch(found){
         case 1:
-            for (int i = 0; i < sizeof(future1.get()); i++)
-                res[i] = future1.get()[i];
+            password = future1.get();
             break;
-        /*case 2:
-            for (int i = 0; i < sizeof(future2.get()); i++)
-                res[i] = future2.get()[i];
+        case 2:
+            password = future2.get();
             break;
         case 3:
-            for (int i = 0; i < sizeof(future3.get()); i++)
-                res[i] = future3.get()[i];
+            password = future3.get();
             break;
         case 4:
-            for (int i = 0; i < sizeof(future4.get()); i++)
-                res[i] = future4.get()[i];
-            break;*/
+            password = future4.get();
+            break;
     }
+    
 
     cout << "---------------------------------------- \n";
-    cout << "mot trouvé : "<< motTest << "\n";
-    cout << "hash trouvé : \n";
-    for (size_t i=0; i< sizeof(res); i++)
-        cout << hex << (int)res[i] << " ";
+    cout << "mot trouvé : "<< password << " par le thread " << found << endl;
     cout << "\n" << endl;
     auto duration = duration_cast<seconds>(stop - start); 
 
     cout << "Time taken by function: " << duration.count() << " seconds" << endl;
 }
 
-int* findPassword(int startVector[TAILLE_MOT], char* alpha, char* hashATrouver, int threadID) {
+string findPassword(int startVector[TAILLE_MOT], string hashATrouver, int threadID) {
     void incrementIndex(int rangIndex, int testVector[]);
-    static int testVector[TAILLE_MOT] = {0, 0, 0, 0, 0, 0, 0};
-    char currentTest[TAILLE_MOT];
-
-
-    printf("hashATrouver : %s", hashATrouver);
-    printf("alpha[1] = %d", alpha[1]);
-
-
-
+    int testVector[TAILLE_MOT] = {0, 0, 0, 0, 0, 0, 0};
+    string currentTest;
 
     //Transfer data in a temp buffer to keep original intact
     for (int i = 0; i < TAILLE_MOT; i++)
@@ -118,29 +105,40 @@ int* findPassword(int startVector[TAILLE_MOT], char* alpha, char* hashATrouver, 
         //    printf("alpha = %d\n", alpha[i]);
 
 
-        currentTest[0] = alpha[testVector[0]];
+        currentTest = alphabet[testVector[0]];
         //printf("currentTest = %s\n", currentTest);
 
         for (size_t i = 1; i < TAILLE_MOT; i++)
         {
             //printf("ajoute la lettre %d\n", alpha[testVector[i]]);
-            currentTest[i] += alpha[testVector[i]];
+            currentTest += alphabet[testVector[i]];
         }
 
         //printf("test de %s\n", currentTest);
         hashTest = encode(currentTest);
-        try{
-            for(int i = 0; i < 1; i++)
-                incrementIndex(TAILLE_MOT - 1, testVector); 
-        }catch(const std::exception& e){
-            printf("End of tests for thread %d \n", threadID);
-            finished = true;
-        }        
-        //printf("Comparing %s and %s", hashATrouver, hashTest);
-        if(strcmp(hashATrouver,hashTest) != 0)
+        //cout << "currentTest = " << currentTest << " || " << hashATrouver <<endl;
+        //cout << "Thread " << threadID << " trying " << currentTest << endl;
+        //cout << "hashTest = " << hashTest << endl;           
+        if(hashATrouver.compare(hashTest)==0){
             found = threadID;
+            finished = true;
+        }else{
+            try{
+                for(int i = 0; i < THREAD_COUNT; i++)
+                    incrementIndex(TAILLE_MOT - 1, testVector); 
+            }catch(const std::exception& e){
+                printf("End of tests for thread %d \n", threadID);
+                finished = true;
+            } 
+        }
+            
     }
-    return testVector;
+    string ret = "";
+    if(found == threadID){
+        for(int i = 0; i < TAILLE_MOT; i++)
+            ret += alphabet[testVector[i]];
+        }
+    return ret;
 }
 
 void incrementIndex(int rangIndex, int testVector[]){
