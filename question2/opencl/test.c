@@ -1,9 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
 #define TAILLE_MOT               7  
 
 
-void mystrncpy(char* result,char * a_copier, int taille){
+void mystrncpy(char* result_compare_hash,char * a_copier, int taille){
         for(int i = 0; i < taille; i++) {
-                result[i]= a_copier[i];
+                result_compare_hash[i]= a_copier[i];
         }
 }
 //Cette  fonction  effectue  une  s u b s t i t u t i o n  decaracteres  en  additionnant  une  valeur
@@ -84,74 +86,73 @@ void incrementIndex(int *my_index, int rangIndex){
 }
 
 int compareHash(char* hash1, char* hash2){
-  int result = 1;
+  int result_compare_hash = 1;
   for(int j =0;  j<TAILLE_MOT;  j++){
     if(hash1[j] != hash2[j]){
-      return 0;
+      result_compare_hash= 0;
     }
   }
-  return 1;
+  return result_compare_hash;
 }
 
-__kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, __global char *alphabet, __global char *mot_trouve, __global int *is_result) {
-    
-    // Get the index of the current element
-    int id_thread = get_global_id(0);
+int main(){
+    char hash_a_trouver[7];
+    char hash_test[7];
+    char alphabet[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    int id_thread = 0;
+
     int my_index[7] = {0,0,0,0,0,0,0};
-    char copy_alphabet[26];
-    char copy_hash_a_trouver[7];
-    int copy_is_result = 0;
     char mot_a_tester[7]; 
     char hash_a_tester[7]; 
-    char lettre_predefini = alphabet[id_thread%26];
     int i = 0;
-    int j = 0;
+    int j;
+    char lettre_predefini = alphabet[id_thread%26];
     int result_compare_hash = 0;
     printf("kernel void decoder(), process %d, avec lettre : %c \n",id_thread, lettre_predefini);
-   
-    for(int j =0;  j<TAILLE_MOT;  j++){
-      copy_hash_a_trouver[j] = hash_a_trouver[j];
-      
-    }
-   
-    for(int j =0;  j<26;  j++){
-      copy_alphabet[j] = alphabet[j];
-    }     
-    
-   
+
+    mot_a_tester[0]='a';
+    mot_a_tester[1]='a';
+    mot_a_tester[2]='n';
+    mot_a_tester[3]='j';
+    mot_a_tester[4]='o';
+    mot_a_tester[5]='u';
+    mot_a_tester[6]='r';
+    printf("mot_a_tester %.7s \n", mot_a_tester);
+    encode(mot_a_tester, hash_a_trouver);
+
     mot_a_tester[0] = lettre_predefini;
 
-    while(copy_is_result ==0 && (mot_a_tester[0] == lettre_predefini)){
-      mot_a_tester[0]= lettre_predefini;
-      for (i=1; i < TAILLE_MOT; i++)
-      {
-        mot_a_tester[i]=copy_alphabet[my_index[i]];
-      }
-      //printf("mot à tester : %.7s \n",mot_a_tester);
-      encode(mot_a_tester, hash_a_tester);
-      incrementIndex(my_index, TAILLE_MOT-1);
-      result_compare_hash=compareHash(hash_a_tester, copy_hash_a_trouver);
-       
-      if(result_compare_hash != 0){
-        is_result[0]=1;
-        
-      }
+    // printf("hash_a_tester %.7s \n", hash_a_tester);
+    // printf("hash_a_trouver %.7s \n", hash_a_trouver);
+    // printf("result_compare_hash %d \n", result_compare_hash);
 
-      copy_is_result=is_result[0];
+    while((mot_a_tester[0] == lettre_predefini) && (result_compare_hash == 0)){
+        mot_a_tester[0]= lettre_predefini;
+        for (i=1; i < TAILLE_MOT; i++)
+        {
+            mot_a_tester[i]=alphabet[my_index[i]];
+        }
+        //printf("mot à tester : %s \n",mot_a_tester);
+
+        encode(mot_a_tester, hash_a_tester);
+        incrementIndex(my_index, TAILLE_MOT-1);
+
+        result_compare_hash=compareHash(hash_a_tester, hash_a_trouver);
     }
-    
-    if(result_compare_hash != 0){
 
-      for(j =0;  j<TAILLE_MOT;  j++){
-        hash_test[j] = hash_a_tester[j];
-      }
-
-      for(j =0;  j<TAILLE_MOT;  j++){
-        mot_trouve[j] = mot_a_tester[j];
-      }
-      printf("Le process %d, a trouvé  le mot : %.7s \n", id_thread, mot_a_tester);
+        printf("HASH TROUVE : \n");
+    for(j =0;  j<TAILLE_MOT;  j++){
+      hash_test[j] = hash_a_tester[j];
+      printf("%c ", hash_test[j]);
     }
-    
-    printf("fin kernel void decoder() , process %d \n",id_thread);
+        printf("\n");
+        printf("MOT TROUVE : \n");
+
+    for(j =0;  j<TAILLE_MOT;  j++){
+      printf("%c ", mot_a_tester[j]);
+    }
+
+    printf("\n fin kernel void decoder() , process %d \n",id_thread);
+    return 0;
 }
 

@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 #include "encodage.cpp"
-#include <chrono> 
+#include <chrono>
+#include <inttypes.h>
+
 using namespace std::chrono; 
 #define TAILLE_MOT               7  
 
@@ -43,7 +45,7 @@ int main(int argc, char **argv)
     cout << "\n" << endl;
     auto duration = duration_cast<seconds>(stop - start); 
 
-    cout << "Time taken by function: " << duration.count() << " seconds" << endl;
+    printf("Time taken by function: %" PRId64 " seconds\n", duration.count());
 }
 
 void incrementIndex(int rangIndex){
