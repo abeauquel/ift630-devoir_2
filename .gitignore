@@ -8,3 +8,5 @@ question1/mult
 .vscode/
 
 question2/test
+
+*.o

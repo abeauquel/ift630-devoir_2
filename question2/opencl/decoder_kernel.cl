@@ -127,7 +127,10 @@ __kernel void decoder(__global char *hash_a_trouver, __global char *hash_test, _
       {
         mot_a_tester[i]=copy_alphabet[my_index[i]];
       }
-      //printf("mot à tester : %.7s \n",mot_a_tester);
+      // if(id_thread == 25){
+      //   printf("mot à tester : %.7s \n",mot_a_tester);
+      // }
+   
       encode(mot_a_tester, hash_a_tester);
       incrementIndex(my_index, TAILLE_MOT-1);
       result_compare_hash=compareHash(hash_a_tester, copy_hash_a_trouver);

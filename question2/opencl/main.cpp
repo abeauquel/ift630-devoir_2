@@ -26,7 +26,7 @@ int main(void)
 {
         auto start = high_resolution_clock::now(); 
         void incrementIndex(int rangIndex);
-        string mot_a_trouver = "banjour";
+        string mot_a_trouver = "zaazzzz";
         string str_hash_a_trouver = encode(mot_a_trouver);
         char hash_a_trouver[TAILLE_MOT] ;
         char hash_test[TAILLE_MOT];
@@ -117,6 +117,8 @@ int main(void)
         ret = clReleaseMemObject(hash_a_trouver_mem_obj);
         ret = clReleaseMemObject(hash_a_tester_mem_obj);
         ret = clReleaseMemObject(alphabet_mem_obj);
+        ret = clReleaseMemObject(result_mem_obj);
+        ret = clReleaseMemObject(is_result_mem_obj);
 
         ret = clReleaseCommandQueue(command_queue);
         ret = clReleaseContext(context);
